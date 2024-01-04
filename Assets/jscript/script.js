@@ -1,23 +1,89 @@
 // Wrap all code that interacts with the DOM in a call to jQuery to ensure that
 // the code isn't run until the browser has finished rendering all the elements
 // in the html.
-$(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
-  //
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-  //
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-  //
-  // TODO: Add code to display the current date in the header of the page.
-});
+var savedToDo = [];
+var saveButton = $(':button');
+var singleTime;
+var today = dayjs().format('dddd: MMMM D');
+$('#currentDay').text(today);
+
+
+ function saveList(){
+
+for (x=0; x < 5; x++){
+var hour = $('#textarea0');
+console.log(hour.value);
+}
+
+savedToDo = $('#textAreaGroup textarea')
+  .map(function(){
+    return $(this).val();
+  })
+
+  console.log(savedToDo);
+  localStorage.setItem("savedToDo", JSON.stringify(savedToDo));
+}
+saveButton.on('click', saveList);
+
+window.onload = function recalText(){{
+  if (JSON.parse(localStorage.getItem("savedToDo") !== null)){
+    console.log("working");
+    savedToDo = JSON.parse(localStorage.getItem("savedToDo"));
+      var hour0 = savedToDo[0];
+      var hour1 = savedToDo[1];
+      var hour2 = savedToDo[2];
+      var hour3 = savedToDo[3];
+      var hour4 = savedToDo[4];
+      var hour5 = savedToDo[5];
+      var hour6 = savedToDo[6];
+      var hour7 = savedToDo[7];
+      var hour8 = savedToDo[8];
+      
+      document.getElementById('textarea0').value = hour0;
+      document.getElementById('textarea1').value = hour1;
+      document.getElementById('textarea2').value = hour2;
+      document.getElementById('textarea3').value = hour3;
+      document.getElementById('textarea4').value = hour4;
+      document.getElementById('textarea5').value = hour5;
+      document.getElementById('textarea6').value = hour6;
+      document.getElementById('textarea7').value = hour7;
+      document.getElementById('textarea8').value = hour8;
+      timeOfDay();
+  }
+}};
+
+function checkTime() {
+  var time = parseInt(dayjs().format('H'));
+
+  var calendarTime = document.querySelectorAll('.time-block');
+  // console.log(calendarTime[0]);
+
+  // var newCalendarTime = Array.from(calendarTime);
+  // console.log(newCalendarTime[0]);
+
+  for (var x=0; x < calendarTime.length ;x++){ 
+    var singleTime= parseInt(calendarTime[x].getAttribute('id').split('-')[1]);
+    // console.log(singleTime);
+    var element = $(calendarTime[x]);
+    element.removeClass('past present future');
+    if (time > singleTime){
+      console.log('PAST ELEMENT:', element);
+      element.addClass('past');
+    }
+    if (time === singleTime){
+      console.log("PRESENT ELEMENT:", element);
+      element.addClass('present');
+    }
+    if (time < singleTime){
+      console.log("PRESENT ELEMENT:", element);
+      element.addClass('future');
+    }
+  }
+ 
+}
+
+function timeOfDay(){
+  var timeCheck = setInterval(checkTime, 60000)
+}
+
+
